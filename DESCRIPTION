@@ -1,0 +1,22 @@
+Package: stravR
+Type: Package
+Title: Functions for working with the Strava API
+Version: 0.1
+Date: 2023-01-30
+Description: Functions for working with the Strava API and data retrieved from it
+BugReports: https://github.com/tim-jc/stravR/issues
+License: MIT
+Imports:
+    httr,
+    magrittr,
+    stringr,
+    dplyr,
+    tidyr,
+    jsonlite,
+Suggests:
+		leaflet
+Authors@R: 
+	person(given = "Tim", family = "Cross",
+    role = c("aut", "cre"),
+    email = "tim.james.cross@gmail.com")
+RoxygenNote: 7.2.3
