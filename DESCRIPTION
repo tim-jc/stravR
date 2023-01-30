@@ -7,14 +7,15 @@ Description: Functions for working with the Strava API and data retrieved from i
 BugReports: https://github.com/tim-jc/stravR/issues
 License: MIT
 Imports:
-    httr,
-    magrittr,
-    stringr,
     dplyr,
     tidyr,
-    jsonlite,
+    magrittr,
+    stringr,
+    httr,
+    jsonlite
 Suggests:
 		leaflet
+Encoding: UTF-8
 Authors@R: 
 	person(given = "Tim", family = "Cross",
     role = c("aut", "cre"),
