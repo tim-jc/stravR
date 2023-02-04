@@ -1,7 +1,7 @@
 #' Load / create Strava authentication token
 #'
-#' \code{get_strava_token} returns an exisiting OAuth token from the working directory. If a token isn't present, it is created before being returned.
-#' See \code{https://developers.strava.com} for more information on create an application and getting the necessary keys to access the API.
+#' \code{get_strava_token} returns an existing OAuth token from the working directory. If a token isn't present, it is created before being returned.
+#' See \code{https://developers.strava.com} for more information on creating an application and getting the necessary keys to access the API.
 #'
 #' @param app_name The Strava application name, chosen by the user.
 #' @param app_client_id An integer, assigned by Strava.
