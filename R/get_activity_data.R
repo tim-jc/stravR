@@ -6,7 +6,7 @@
 #' @param N_to_return Number of activities to return. Defaults to \code{200}.
 #' @param activities_to_exclude Any activity IDs to exclude. Defaults to \code{NA_character}.
 #' @return A dataframe of stream data
-#' @import httr jsonlite dplyr purrr stringr
+#' @import httr jsonlite dplyr purrr stringr magrittr
 #' @export
 #' @examples
 #' my_activity_df <- get_activity_data(strava_token = my_auth_token,
@@ -14,14 +14,16 @@
 #'
 
 get_activity_data <- function(strava_token,
-                             N_to_return = 200,
-                             activities_to_exclude = NA_integer_) {
+                              N_to_return = 200,
+                              activities_to_exclude = NA_integer_) {
+  
+  `%>%` <- magrittr::`%>%`
   
   activity_data <- httr::GET(url = "https://www.strava.com/api/v3/athlete/activities",
                              config = strava_token, 
                              query = list(per_page = N_to_return))
   
-  # Find new activities and process
+  # Process activities
   activities <- activity_data$content %>%
     rawToChar() %>%
     jsonlite::fromJSON() %>% 
