@@ -6,7 +6,7 @@
 #' @param N_to_return Number of activities to return. Defaults to \code{200}.
 #' @param activities_to_exclude Any activity IDs to exclude. Defaults to \code{NA_character}.
 #' @return A dataframe of stream data
-#' @import httr jsonlite dplyr purrr stringr magrittr
+#' @import httr jsonlite dplyr purrr stringr tibble
 #' @export
 #' @examples
 #' my_activity_df <- get_activity_data(strava_token = my_auth_token,
@@ -17,26 +17,24 @@ get_activity_data <- function(strava_token,
                               N_to_return = 200,
                               activities_to_exclude = NA_integer_) {
   
-  `%>%` <- magrittr::`%>%`
-  
   activity_data <- httr::GET(url = "https://www.strava.com/api/v3/athlete/activities",
                              config = strava_token, 
                              query = list(per_page = N_to_return))
   
   # Process activities
-  activities <- activity_data$content %>%
-    rawToChar() %>%
-    jsonlite::fromJSON() %>% 
-    dplyr::filter(!id %in% activities_to_exclude) %>% 
+  activities <- activity_data$content |>
+    rawToChar() |>
+    jsonlite::fromJSON() |> 
+    dplyr::filter(!id %in% activities_to_exclude) |> 
     dplyr::mutate(start_lat = purrr::map_dbl(start_latlng, 1),
                   start_lng = purrr::map_dbl(start_latlng, 2),
                   end_lat = purrr::map_dbl(end_latlng, 1),
                   end_lng = purrr::map_dbl(end_latlng, 2),
                   strava_link = stringr::str_glue("https://www.strava.com/activities/{id}"),
-                  ride_start = stringr::str_replace_all(start_date_local, "T|Z", " ") %>% as.POSIXct(),
-                  ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S")) %>% 
-    dplyr::select(-c(athlete, map, start_latlng, end_latlng)) %>% 
-    as_tibble()
+                  ride_start = stringr::str_replace_all(start_date_local, "T|Z", " ") |> as.POSIXct(),
+                  ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S")) |> 
+    dplyr::select(-c(athlete, map, start_latlng, end_latlng)) |> 
+    tibble::as_tibble()
   
   return(activities)
   
