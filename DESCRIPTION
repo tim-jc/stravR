@@ -6,6 +6,7 @@ Date: 2023-01-30
 Description: Functions for working with the Strava API and data retrieved from it
 BugReports: https://github.com/tim-jc/stravR/issues
 License: MIT
+Depends: R (>= 4.1.0)
 Imports:
     dplyr,
     tidyr,
