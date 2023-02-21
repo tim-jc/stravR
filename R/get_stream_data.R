@@ -20,9 +20,7 @@ get_stream_data <- function(activity_id,
                             strava_token,
                             display_map = F) {
   
-  `%>%` <- magrittr::`%>%`
-  
-  stringr::str_glue("Starting stream data retrieval for activity {activity_id}.") %>% print()
+  stringr::str_glue("Starting stream data retrieval for activity {activity_id}.") |> print()
   
   stream_types <- stringr::str_flatten(stream_types, collapse = ",")
   
@@ -33,39 +31,39 @@ get_stream_data <- function(activity_id,
     stop("Rate limit exceeded")
   }
   
-  stream_to_load <- stream$content %>%
-    rawToChar() %>%
-    jsonlite::fromJSON() %>% 
-    tidyr::unnest(data) %>% 
-    dplyr::group_by(type) %>% 
-    dplyr::mutate(record_id = dplyr::row_number()) %>% 
+  stream_to_load <- stream$content |>
+    rawToChar() |>
+    jsonlite::fromJSON() |> 
+    tidyr::unnest(data) |> 
+    dplyr::group_by(type) |> 
+    dplyr::mutate(record_id = dplyr::row_number()) |> 
     dplyr::ungroup()
   
   if(any(stream_to_load$type == "latlng")) {
-    stream_to_load <- stream_to_load %>% 
-      dplyr::mutate(value = data[,1]) %>% 
-      dplyr::select(record_id, type, value) %>% 
-      tidyr::pivot_wider(names_from = "type") %>% 
-      dplyr::rename(lat = latlng) %>% 
-      dplyr::left_join(stream_to_load %>%
-                         dplyr::filter(type == "latlng") %>% 
-                         dplyr::transmute(record_id, lng = data[,2])) %>% 
-      dplyr::select(-record_id) %>% 
+    stream_to_load <- stream_to_load |> 
+      dplyr::mutate(value = data[,1]) |> 
+      dplyr::select(record_id, type, value) |> 
+      tidyr::pivot_wider(names_from = "type") |> 
+      dplyr::rename(lat = latlng) |> 
+      dplyr::left_join(stream_to_load |>
+                         dplyr::filter(type == "latlng") |> 
+                         dplyr::transmute(record_id, lng = data[,2])) |> 
+      dplyr::select(-record_id) |> 
       dplyr::mutate(id = activity_id)
   } else {
-    stream_to_load <- stream_to_load %>% 
-      dplyr::select(record_id, type, data) %>% 
+    stream_to_load <- stream_to_load |> 
+      dplyr::select(record_id, type, data) |> 
       tidyr::pivot_wider(names_from = "type",
-                         values_from = "data") %>% 
-      dplyr::select(-record_id) %>% 
+                         values_from = "data") |> 
+      dplyr::select(-record_id) |> 
       dplyr::mutate(id = activity_id)
   }   
   
   if(display_map) {
     
-    leaflet::leaflet() %>% 
-      leaflet::addTiles() %>% 
-      leaflet::addPolylines(stream_to_load$lng, stream_to_load$lat) %>% 
+    leaflet::leaflet() |> 
+      leaflet::addTiles() |> 
+      leaflet::addPolylines(stream_to_load$lng, stream_to_load$lat) |> 
       print()
     
   }
