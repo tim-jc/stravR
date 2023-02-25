@@ -26,14 +26,15 @@ get_activity_data <- function(strava_token,
     rawToChar() |>
     jsonlite::fromJSON() |> 
     dplyr::filter(!id %in% activities_to_exclude) |> 
-    dplyr::mutate(start_lat = purrr::map_dbl(start_latlng, 1),
+    dplyr::mutate(strava_id = id,
+                  start_lat = purrr::map_dbl(start_latlng, 1),
                   start_lng = purrr::map_dbl(start_latlng, 2),
                   end_lat = purrr::map_dbl(end_latlng, 1),
                   end_lng = purrr::map_dbl(end_latlng, 2),
                   strava_link = stringr::str_glue("https://www.strava.com/activities/{id}"),
                   ride_start = stringr::str_replace_all(start_date_local, "T|Z", " ") |> as.POSIXct(),
                   ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S")) |> 
-    dplyr::select(-c(athlete, map, start_latlng, end_latlng)) |> 
+    dplyr::select(-c(id, athlete, map, start_latlng, end_latlng)) |> 
     tibble::as_tibble()
   
   return(activities)
