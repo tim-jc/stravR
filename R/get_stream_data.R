@@ -49,14 +49,14 @@ get_stream_data <- function(activity_id,
                          dplyr::filter(type == "latlng") |> 
                          dplyr::transmute(record_id, lng = data[,2])) |> 
       dplyr::select(-record_id) |> 
-      dplyr::mutate(id = activity_id)
+      dplyr::mutate(strava_id = activity_id)
   } else {
     stream_to_load <- stream_to_load |> 
       dplyr::select(record_id, type, data) |> 
       tidyr::pivot_wider(names_from = "type",
                          values_from = "data") |> 
       dplyr::select(-record_id) |> 
-      dplyr::mutate(id = activity_id)
+      dplyr::mutate(strava_id = activity_id)
   }   
   
   if(display_map) {
