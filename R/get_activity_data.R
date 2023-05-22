@@ -5,6 +5,7 @@
 #' @param strava_token Strava authentication token.
 #' @param N_to_return Number of activities to return. Defaults to \code{200}.
 #' @param activities_to_exclude Any activity IDs to exclude. Defaults to \code{NA_character}.
+#' @param sport_types_to_include Sport types to retrieve. Defaults to \code{c("Ride", "VirtualRide")}.
 #' @return A dataframe of stream data
 #' @import httr jsonlite dplyr purrr stringr tibble
 #' @export
@@ -15,7 +16,8 @@
 
 get_activity_data <- function(strava_token,
                               N_to_return = 200,
-                              activities_to_exclude = NA_integer_) {
+                              activities_to_exclude = NA_integer_,
+                              sport_types_to_include = c("Ride", "VirtualRide")) {
   
   activity_data <- httr::GET(url = "https://www.strava.com/api/v3/athlete/activities",
                              config = strava_token, 
@@ -25,7 +27,8 @@ get_activity_data <- function(strava_token,
   activities <- activity_data$content |>
     rawToChar() |>
     jsonlite::fromJSON() |> 
-    dplyr::filter(!id %in% activities_to_exclude) |> 
+    dplyr::filter(!id %in% activities_to_exclude,
+                  sport_type %in% sport_types_to_include) |> 
     dplyr::mutate(strava_id = id,
                   start_lat = purrr::map_dbl(start_latlng, 1),
                   start_lng = purrr::map_dbl(start_latlng, 2),
