@@ -37,7 +37,7 @@ get_activity_data <- function(strava_token,
                   strava_link = stringr::str_glue("https://www.strava.com/activities/{id}"),
                   ride_start = stringr::str_replace_all(start_date_local, "T|Z", " ") |> as.POSIXct(),
                   ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S")) |> 
-    dplyr::select(-c(id, athlete, map, start_latlng, end_latlng)) |> 
+    dplyr::select(-c(id, athlete, map, start_latlng, end_latlng, device_name)) |> 
     tibble::as_tibble()
   
   return(activities)
