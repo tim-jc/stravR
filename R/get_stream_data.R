@@ -47,7 +47,8 @@ get_stream_data <- function(activity_id,
       dplyr::rename(lat = latlng) |> 
       dplyr::left_join(stream_to_load |>
                          dplyr::filter(type == "latlng") |> 
-                         dplyr::transmute(record_id, lng = data[,2])) |> 
+                         dplyr::transmute(record_id, lng = data[,2]),
+                       by = "record_id") |> 
       dplyr::select(-record_id) |> 
       dplyr::mutate(strava_id = activity_id)
   } else {
