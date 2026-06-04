@@ -36,7 +36,12 @@ get_activity_data <- function(strava_token,
                   end_lng = purrr::map_dbl(end_latlng, 2),
                   strava_link = stringr::str_glue("https://www.strava.com/activities/{id}"),
                   ride_start = stringr::str_replace_all(start_date_local, "T|Z", " ") |> as.POSIXct(),
-                  ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S")) |> 
+                  ride_start = format(ride_start, "%Y-%m-%d %H:%M:%S"),
+                  average_watts = ifelse(device_watts, average_watts, NA_real_),
+                  weighted_average_watts = ifelse(device_watts, weighted_average_watts, NA_real_),
+                  kilojoules = ifelse(device_watts, kilojoules, NA_real_),
+                  max_watts = if_else(device_watts, max_watts, NA_real_),
+                  device_watts = as.integer(device_watts)) |> 
     dplyr::select(-c(id, athlete, map, start_latlng, end_latlng, device_name)) |> 
     tibble::as_tibble()
   
