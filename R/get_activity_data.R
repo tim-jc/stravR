@@ -38,7 +38,7 @@ get_activity_data <- function(
       "Retrieving activity page {page}..."
     ))
     
-    page_data <- .strava_get(
+    page_data <- strava_get_internal(
       url = "https://www.strava.com/api/v3/athlete/activities",
       token = strava_token,
       query = list(
