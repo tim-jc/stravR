@@ -18,7 +18,7 @@
 #'
 #' @keywords internal
 #' @noRd
-.strava_get <- function(url, token, query = NULL) {
+strava_get_internal <- function(url, token, query = NULL) {
   
   resp <- httr::GET(
     url = url,
@@ -29,7 +29,7 @@
   httr::stop_for_status(resp)
   
   parsed <- httr::content(resp, as = "text", encoding = "UTF-8") |>
-    jsonlite::fromJSON(flatten = TRUE)
+    jsonlite::fromJSON()
   
   return(parsed)
 }
